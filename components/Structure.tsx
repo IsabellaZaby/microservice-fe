@@ -8,11 +8,12 @@ import { Alert, createTheme, ThemeProvider } from "@mui/material";
 
 interface IStructure {
     error?: string;
+    className?: string;
 }
 
 const Structure: FC<IStructure> = (props) => {
 
-    const {children, error} = props;
+    const {children, error, className} = props;
     const [open, setOpen] = useState<boolean>(false);
 
 
@@ -22,7 +23,8 @@ const Structure: FC<IStructure> = (props) => {
 
     const mainClassName = classNamesHelper([
         styles.main,
-        open && styles.open
+        open && styles.open,
+        className ?? ''
     ]);
 
     const theme = createTheme({
