@@ -12,6 +12,7 @@ import Table from "../components/Table";
 
 const Delete: NextPage = () => {
 
+    const [backendError, setBackendError] = useState(undefined);
     const [pageLoad, setPageLoad] = useState(true);
     const [selected, setSelected] = useState<number[]>([]);
     const [sensors, setSensors] = useState<ISensor[]>([]);
@@ -60,20 +61,27 @@ const Delete: NextPage = () => {
     };
 
     const updateData = () => {
+        setBackendError(undefined);
         const formErrors = validateForm(formData, setErrors, errors);
         if (selected?.length === 1 && !formErrors.timestamp && !formErrors.humidity && !formErrors.temperature) {
             setLoading(true);
             selected.forEach(async (id) => {
-                await fetch('http://localhost:8080/update', {
+                const rawResponse = await fetch('http://localhost:8080/update', {
                     method: 'PUT',
                     headers,
                     body: JSON.stringify({...formData, id: String(id)})
-                }).then(() => fetchData());
+                });
+                if (rawResponse.status !== 200) {
+                    const content = await rawResponse.json();
+                    setBackendError(content.message);
+                } else {
+                    fetchData();
+                    setIsUpdate(false);
+                    setSelected([]);
+                }
             });
-            setSelected([]);
-            setLoading(false);
-            setIsUpdate(false);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -81,7 +89,7 @@ const Delete: NextPage = () => {
     }, []);
 
     return (
-        <Structure>
+        <Structure error={backendError}>
             {!isUpdate ? <Table
                     sensors={sensors}
                     setSensors={setSensors}

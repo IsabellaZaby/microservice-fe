@@ -38,6 +38,7 @@ const Input: NextPage = () => {
 
 
     const submitForm = async () => {
+        setBackendError(undefined);
         setLoading(true);
         const formErrors = validateForm(formData, setErrors, errors);
         if (!formErrors.timestamp && !formErrors.sensorId && !formErrors.humidity && !formErrors.temperature) {

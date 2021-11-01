@@ -70,6 +70,7 @@ const Structure: FC<IStructure> = (props) => {
                         {children}
                     </main>
                 </div>
+                <footer className={styles.footer}>© Isabella Zaby</footer>
             </ThemeProvider>
         </>
     );
