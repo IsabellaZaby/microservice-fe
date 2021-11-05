@@ -5,6 +5,7 @@ import InputIcon from '@mui/icons-material/Input';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import React, { FC } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface DrawerMenu {
     open: boolean;
@@ -27,38 +28,38 @@ const DrawerMenu: FC<DrawerMenu> = ({open}) => {
             }}
         >
             <List>
-                <a href="/">
+                <Link href="/">
                     <ListItem selected={pathname === '/'}>
                         <ListItemIcon>
                             <HomeIcon/>
                         </ListItemIcon>
                         <ListItemText primary="Home"/>
                     </ListItem>
-                </a>
-                <a href="/charts">
+                </Link>
+                <Link href="/charts">
                     <ListItem selected={pathname === '/charts'}>
                         <ListItemIcon>
                             <TimelineIcon/>
                         </ListItemIcon>
                         <ListItemText primary="Charts"/>
                     </ListItem>
-                </a>
-                <a href="/input">
+                </Link>
+                <Link href="/input">
                     <ListItem selected={pathname === '/input'}>
                         <ListItemIcon>
                             <InputIcon/>
                         </ListItemIcon>
                         <ListItemText primary="Input"/>
                     </ListItem>
-                </a>
-                <a href="/delete">
+                </Link>
+                <Link href="/delete">
                     <ListItem selected={pathname === '/delete'}>
                         <ListItemIcon>
                             <DeleteIcon/>
                         </ListItemIcon>
                         <ListItemText primary="Update / Delete"/>
                     </ListItem>
-                </a>
+                </Link>
             </List>
             <Divider/>
         </Drawer>

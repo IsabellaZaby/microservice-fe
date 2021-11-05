@@ -1,0 +1,18 @@
+.bwrapper {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.button {
+  margin: 5px;
+}
+
+.container {
+  height: 400px;
+  width: 100%;
+}
+
+.inner {
+  display: flex;
+  height: 100%;
+}

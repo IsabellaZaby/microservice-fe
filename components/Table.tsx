@@ -1,13 +1,13 @@
 import React, { FC } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import styles from "../styles/Delete.module.scss";
+import styles from "./styles/Table.module.scss";
 import { Button } from "@mui/material";
 import { ISensor } from "./interfaces";
 
 const columns: GridColDef[] = [
     {field: 'id', headerName: 'ID', width: 70},
     {field: 'sensor_id', headerName: 'Sensor ID', width: 130},
-    {field: 'timestamp', headerName: 'Timestamp', width: 130},
+    {field: 'timestamp', headerName: 'Timestamp', width: 160},
     {field: 'temperature', headerName: 'Temperature', type: 'number', width: 70},
     {field: 'humidity', headerName: 'Humidity', type: 'number', width: 70},
 ];
@@ -17,12 +17,11 @@ interface ITable {
     setSensors: (sensors: ISensor[]) => void;
     selected: number[];
     setSelected: (num: number[]) => void;
-    pageLoad: boolean;
     getUpdateData: () => void;
 }
 
 const Table: FC<ITable> = (props) => {
-    const {sensors, setSensors, selected, setSelected, pageLoad, getUpdateData} = props;
+    const {sensors, setSensors, selected, setSelected, getUpdateData} = props;
     const selectionChange = (e: any) => {
         setSelected(e);
     };
@@ -44,21 +43,22 @@ const Table: FC<ITable> = (props) => {
     };
     return (
         <>
-            <div style={{height: 400, width: 600}}>
-                <DataGrid
-                    rows={sensors}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    checkboxSelection
-                    onSelectionModelChange={selectionChange}
-                    disableColumnMenu={true}
-                    disableSelectionOnClick={true}
-                    disableColumnFilter={true}
-                    loading={pageLoad}
-                />
+            <div className={styles.container}>
+                <div className={styles.inner}>
+                    <DataGrid
+                        rows={sensors}
+                        columns={columns}
+                        pageSize={5}
+                        rowsPerPageOptions={[5]}
+                        checkboxSelection
+                        onSelectionModelChange={selectionChange}
+                        disableColumnMenu={true}
+                        disableSelectionOnClick={true}
+                        disableColumnFilter={true}
+                    />
+                </div>
             </div>
-            <div className={styles.buttonWrapper}>
+            <div className={styles.bwrapper}>
                 <Button
                     variant="contained"
                     disabled={selected?.length > 1 || selected?.length === 0}
