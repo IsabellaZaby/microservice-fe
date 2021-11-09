@@ -1,8 +1,16 @@
 import '../styles/globals.scss'
-import type { AppProps } from 'next/app'
-import React from "react";
-import { createTheme, ThemeProvider } from "@mui/material";
+import type {AppProps} from 'next/app'
+import React, {createContext} from "react";
+import {createTheme, ThemeProvider} from "@mui/material";
 import Head from "next/head";
+import {ContextProps} from "../components/interfaces";
+
+const initialContextState = {
+    backendErrors: undefined,
+    loading: false,
+};
+
+export const Context = createContext<ContextProps>({...initialContextState});
 
 function MyApp({Component, pageProps}: AppProps) {
 
@@ -29,7 +37,7 @@ function MyApp({Component, pageProps}: AppProps) {
     });
 
     return (
-        <>
+        <Context.Provider value={{...initialContextState}}>
             <Head>
                 <title>Sensor Dashboard</title>
                 <meta name="description" content="Sensor Dashboard for accessing data"/>
@@ -42,7 +50,7 @@ function MyApp({Component, pageProps}: AppProps) {
             <ThemeProvider theme={theme}>
                 <Component {...pageProps} />
             </ThemeProvider>
-        </>
+        </Context.Provider>
     );
 };
 export default MyApp;

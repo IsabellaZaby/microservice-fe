@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Structure from "../components/Structure";
 import { Button } from "@mui/material";
 import styles from "../styles/Delete.module.scss"
@@ -9,6 +9,7 @@ import { LoadingButton } from "@mui/lab";
 import { COMMON_CONSTANTS, validateForm } from "../components/utils";
 import SensorForm from "../components/SensorForm";
 import Table from "../components/Table";
+import { Context } from "./_app";
 
 const fetchData = async () => {
     const response = await fetch("http://localhost:8080/readAll");
@@ -21,10 +22,9 @@ interface INextPage {
 
 const Delete: NextPage<INextPage> = ({data}) => {
 
-    const [backendError, setBackendError] = useState(undefined);
+    const context = useContext(Context);
     const [selected, setSelected] = useState<number[]>([]);
     const [sensors, setSensors] = useState<ISensor[]>([...data]);
-    const [loading, setLoading] = useState(false);
     const [isUpdate, setIsUpdate] = useState(false);
     const [formData, setFormData] = useState<IFormData>({
         sensorId: '',
@@ -61,10 +61,10 @@ const Delete: NextPage<INextPage> = ({data}) => {
     };
 
     const updateData = () => {
-        setBackendError(undefined);
+        context.backendErrors = undefined;
         const formErrors = validateForm(formData, setErrors, errors);
         if (selected?.length === 1 && !formErrors.timestamp && !formErrors.humidity && !formErrors.temperature) {
-            setLoading(true);
+            context.loading = true;
             selected.forEach(async (id) => {
                 const rawResponse = await fetch('http://localhost:8080/update', {
                     method: 'PUT',
@@ -73,7 +73,7 @@ const Delete: NextPage<INextPage> = ({data}) => {
                 });
                 if (rawResponse.status !== 200) {
                     const content = await rawResponse.json();
-                    setBackendError(content.message);
+                    context.backendErrors = content.message;
                 } else {
                     fetchData().then(res => setSensors(res));
                     setIsUpdate(false);
@@ -81,11 +81,11 @@ const Delete: NextPage<INextPage> = ({data}) => {
                 }
             });
         }
-        setLoading(false);
+        context.loading = false;
     };
 
     return (
-        <Structure error={backendError}>
+        <Structure error={context.backendErrors}>
             {!isUpdate ? <Table
                     sensors={sensors}
                     setSensors={setSensors}
@@ -102,7 +102,7 @@ const Delete: NextPage<INextPage> = ({data}) => {
                         type={COMMON_CONSTANTS.UPDATE}
                     />
                     <LoadingButton
-                        loading={loading}
+                        loading={context.loading}
                         variant="contained"
                         onClick={updateData}
                         className={styles.button}>

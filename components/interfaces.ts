@@ -1,3 +1,8 @@
+export interface ContextProps {
+    backendErrors: string | undefined;
+    loading: boolean;
+}
+
 export interface IFormData {
     [sensorId: string]: string | null;
 

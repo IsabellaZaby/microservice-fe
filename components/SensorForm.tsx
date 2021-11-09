@@ -1,12 +1,12 @@
-import React, { FC } from "react";
+import React, {FC, useState} from "react";
 import styles from "../styles/Input.module.scss";
-import { TextField } from "@mui/material";
-import { DateTimePicker, LocalizationProvider } from "@mui/lab";
+import {TextField} from "@mui/material";
+import {DateTimePicker, LocalizationProvider} from "@mui/lab";
 import DateAdapter from "@mui/lab/AdapterDateFns";
-import { de } from "date-fns/locale";
-import { formatISO } from "date-fns";
-import { IFormData, IFormDataError } from "./interfaces";
-import { COMMON_CONSTANTS } from "./utils";
+import {de} from "date-fns/locale";
+import {formatISO, isValid} from "date-fns";
+import {IFormData, IFormDataError} from "./interfaces";
+import {COMMON_CONSTANTS} from "./utils";
 
 interface ISensorForm {
     type: string;
@@ -28,8 +28,12 @@ const SensorForm: FC<ISensorForm> = (props) => {
     };
 
     const handleDateChange = (e: any) => {
-        setErrors({...errors, [e?.target?.id]: false});
-        setFormData({...formData, timestamp: formatISO(e)});
+        if (isValid(e)) {
+            setErrors({...errors, timestamp: false});
+            setFormData({...formData, timestamp: formatISO(e)});
+        } else {
+            setErrors({...errors, timestamp: true});
+        }
     };
 
     return (
@@ -47,15 +51,16 @@ const SensorForm: FC<ISensorForm> = (props) => {
             />
             <LocalizationProvider dateAdapter={DateAdapter} locale={de}>
                 <DateTimePicker
-                    label="Timestamp (will be converted) *"
+                    label="Timestamp *"
                     value={formData.timestamp}
                     onChange={handleDateChange}
-                    inputFormat="dd-MM-yyyy HH:mm:ss"
+                    inputFormat="dd/MM/yyyy HH:mm:ss"
                     renderInput={(params) =>
                         <TextField
                             {...params}
                             error={errors.timestamp}
-                            helperText={errors.timestamp && "This field is required."}
+                            helperText={errors.timestamp && <div style={{maxWidth: 231}}>This field is required. Format has to be dd/MM/yyyy
+                                HH:mm:ss.</div>}
                         />}
                 />
             </LocalizationProvider>
