@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import LocationDateTime from "./LocationDateTime";
 
 interface IDashboardAppBar {
     handleDrawerOpen: () => void;
@@ -23,6 +24,7 @@ const DashboardAppBar: FC<IDashboardAppBar> = ({handleDrawerOpen}) => {
                 <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                     Dashboard
                 </Typography>
+                <LocationDateTime/>
             </Toolbar>
         </AppBar>
     );

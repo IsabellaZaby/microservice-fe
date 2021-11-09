@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Structure from "../components/Structure";
 import { Button } from "@mui/material";
 import styles from "../styles/Delete.module.scss"
@@ -11,20 +11,12 @@ import SensorForm from "../components/SensorForm";
 import Table from "../components/Table";
 import { Context } from "./_app";
 
-const fetchData = async () => {
-    const response = await fetch("http://localhost:8080/readAll");
-    return await response.json();
-};
-
-interface INextPage {
-    data: ISensor[];
-}
-
-const Delete: NextPage<INextPage> = ({data}) => {
+const Delete: NextPage = () => {
 
     const context = useContext(Context);
+    const [pageLoad, setPageLoad] = useState(true);
     const [selected, setSelected] = useState<number[]>([]);
-    const [sensors, setSensors] = useState<ISensor[]>([...data]);
+    const [sensors, setSensors] = useState<ISensor[]>([]);
     const [isUpdate, setIsUpdate] = useState(false);
     const [formData, setFormData] = useState<IFormData>({
         sensorId: '',
@@ -38,6 +30,15 @@ const Delete: NextPage<INextPage> = ({data}) => {
         temperature: false,
         humidity: false
     });
+
+    const fetchData = async () => {
+        const response = await fetch("http://localhost:8080/readAll");
+        response.json().then((json) => {
+            setSensors(json);
+            setPageLoad(false);
+        });
+    };
+
 
     const headers = new Headers({
         'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ const Delete: NextPage<INextPage> = ({data}) => {
                     const content = await rawResponse.json();
                     context.backendErrors = content.message;
                 } else {
-                    fetchData().then(res => setSensors(res));
+                    fetchData();
                     setIsUpdate(false);
                     setSelected([]);
                 }
@@ -83,6 +84,10 @@ const Delete: NextPage<INextPage> = ({data}) => {
         }
         context.loading = false;
     };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
         <Structure error={context.backendErrors}>
@@ -92,6 +97,7 @@ const Delete: NextPage<INextPage> = ({data}) => {
                     selected={selected}
                     setSelected={setSelected}
                     getUpdateData={getUpdateData}
+                    pageLoad={pageLoad}
                 /> :
                 <>
                     <SensorForm
@@ -119,9 +125,5 @@ const Delete: NextPage<INextPage> = ({data}) => {
         </Structure>
     );
 };
-Delete.getInitialProps = async () => {
-    const data: ISensor[] = await fetchData();
-    return {data};
-}
 
 export default Delete;

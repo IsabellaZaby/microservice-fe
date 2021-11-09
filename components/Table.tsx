@@ -18,10 +18,11 @@ interface ITable {
     selected: number[];
     setSelected: (num: number[]) => void;
     getUpdateData: () => void;
+    pageLoad: boolean;
 }
 
 const Table: FC<ITable> = (props) => {
-    const {sensors, setSensors, selected, setSelected, getUpdateData} = props;
+    const {sensors, setSensors, selected, setSelected, getUpdateData, pageLoad} = props;
     const selectionChange = (e: any) => {
         setSelected(e);
     };
@@ -55,6 +56,7 @@ const Table: FC<ITable> = (props) => {
                         disableColumnMenu={true}
                         disableSelectionOnClick={true}
                         disableColumnFilter={true}
+                        loading={pageLoad}
                     />
                 </div>
             </div>

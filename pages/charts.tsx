@@ -1,32 +1,33 @@
 import type { NextPage } from "next";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Structure from "../components/Structure";
 import SensorChart from "../components/SensorChart";
 import { IChartDTO } from "../components/interfaces";
 import styles from "../components/styles/Structure.module.scss";
+import { CircularProgress } from "@mui/material";
 
-const fetchData = async () => {
-    const response = await fetch("http://localhost:8080/readChartData");
-    return await response.json();
-};
+const Charts: NextPage = () => {
 
-interface ICharts {
-    data: IChartDTO[];
-}
-
-const Charts: NextPage<ICharts> = ({data}) => {
+    const [sensors, setSensors] = useState<IChartDTO[]>([]);
+    const [pageLoad, setPageLoad] = useState(true);
+    const fetchData = async () => {
+        const response = await fetch("http://localhost:8080/readChartData");
+        response.json().then((json) => {
+            setSensors(json);
+        });
+        setPageLoad(false);
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
-        <Structure className={styles.charts}>
-            {data?.map((sensor, index) =>
-                    <SensorChart key={`${sensor?.sensor_id}-${index}`} data={sensor}/>)}
+        <Structure className={!pageLoad ? styles.charts : ''}>
+            {pageLoad ? <CircularProgress style={{margin: '0 auto'}}/> :
+                sensors?.map((sensor, index) =>
+                    <SensorChart key={`${sensor?.sensor_id}-${index}`} data={sensor}/>)
+            }
         </Structure>
     );
 };
-
-Charts.getInitialProps = async () => {
-    const data = await fetchData();
-    return {data};
-}
-
 export default Charts;
