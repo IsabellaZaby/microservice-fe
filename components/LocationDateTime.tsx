@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import styles from './styles/LocationDateTime.module.scss';
 
 const LocationDateTime = () => {
 
@@ -12,7 +13,7 @@ const LocationDateTime = () => {
     });
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             {date.toDateString() + " " + date.toLocaleTimeString()}
         </div>
     )

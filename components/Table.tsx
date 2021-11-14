@@ -6,10 +6,10 @@ import { ISensor } from "./interfaces";
 
 const columns: GridColDef[] = [
     {field: 'id', headerName: 'ID', width: 70},
-    {field: 'sensor_id', headerName: 'Sensor ID', width: 130},
-    {field: 'timestamp', headerName: 'Timestamp', width: 160},
-    {field: 'temperature', headerName: 'Temperature', type: 'number', width: 70},
-    {field: 'humidity', headerName: 'Humidity', type: 'number', width: 70},
+    {field: 'sensor_id', headerName: 'Sensor ID', minWidth: 130},
+    {field: 'timestamp', headerName: 'Timestamp', minWidth: 160},
+    {field: 'temperature', headerName: 'Temperature', type: 'number', minWidth: 70},
+    {field: 'humidity', headerName: 'Humidity', type: 'number', minWidth: 70},
 ];
 
 interface ITable {

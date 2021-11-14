@@ -1,13 +1,13 @@
 import { IFormData, IFormDataError } from "./interfaces";
 
-export const classNamesHelper = (classes: (string | boolean)[]) => {
-    return classes.filter((val) => typeof val === 'string').join(" ");
-};
-
 export enum COMMON_CONSTANTS {
     UPDATE = 'update',
     INPUT = 'input'
 }
+
+export const classNamesHelper = (classes: (string | boolean)[]) => {
+    return classes.filter((val) => typeof val === 'string').join(" ");
+};
 
 export const validateForm = (formData: IFormData, setErrors: (err: IFormDataError) => void, errors: IFormDataError) => {
     const keys = Object.keys(formData);
