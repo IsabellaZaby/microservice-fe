@@ -1,18 +1,22 @@
 import '../styles/globals.scss'
-import type {AppProps} from 'next/app'
-import React, {createContext} from "react";
-import {createTheme, ThemeProvider} from "@mui/material";
+import type { AppProps } from 'next/app'
+import React, { createContext, useState } from "react";
+import { createTheme, ThemeProvider } from "@mui/material";
 import Head from "next/head";
-import {ContextProps} from "../components/interfaces";
+import { ContextProps } from "../components/interfaces";
 
 const initialContextState = {
     backendErrors: undefined,
+    setBackendErrors: () => {},
     loading: false,
-};
+    setLoading: () => {}
+}
 
 export const Context = createContext<ContextProps>({...initialContextState});
 
 function MyApp({Component, pageProps}: AppProps) {
+    const [backendErrors, setBackendErrors] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const theme = createTheme({
         palette: {
@@ -37,7 +41,7 @@ function MyApp({Component, pageProps}: AppProps) {
     });
 
     return (
-        <Context.Provider value={{...initialContextState}}>
+        <Context.Provider value={{backendErrors, setBackendErrors, loading, setLoading}}>
             <Head>
                 <title>Sensor Dashboard</title>
                 <meta name="description" content="Sensor Dashboard for accessing data"/>

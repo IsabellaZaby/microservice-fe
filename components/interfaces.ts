@@ -1,6 +1,8 @@
 export interface ContextProps {
     backendErrors: string | undefined;
+    setBackendErrors: (str: string) => void;
     loading: boolean;
+    setLoading: (bool: boolean) => void;
 }
 
 export interface IFormData {

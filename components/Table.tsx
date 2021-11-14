@@ -8,8 +8,8 @@ const columns: GridColDef[] = [
     {field: 'id', headerName: 'ID', width: 70},
     {field: 'sensor_id', headerName: 'Sensor ID', minWidth: 130},
     {field: 'timestamp', headerName: 'Timestamp', minWidth: 160},
-    {field: 'temperature', headerName: 'Temperature', type: 'number', minWidth: 70},
-    {field: 'humidity', headerName: 'Humidity', type: 'number', minWidth: 70},
+    {field: 'temperature', headerName: 'Temperature in °C', type: 'number', minWidth: 70},
+    {field: 'humidity', headerName: 'Humidity in %', type: 'number', minWidth: 70},
 ];
 
 interface ITable {

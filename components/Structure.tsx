@@ -1,19 +1,20 @@
-import React, { FC, useState } from "react";
+import React, { FC, useContext, useState } from "react";
 import { classNamesHelper } from "./utils";
 import DashboardAppBar from "./DashboardAppBar";
 import DrawerMenu from "./DrawerMenu";
 import styles from "./styles/Structure.module.scss";
 import { Alert } from "@mui/material";
+import { Context } from "../pages/_app";
 
 interface IStructure {
-    error?: string;
     className?: string;
 }
 
 const Structure: FC<IStructure> = (props) => {
 
-    const {children, error, className} = props;
+    const {children, className} = props;
     const [open, setOpen] = useState<boolean>(false);
+    const {backendErrors} = useContext(Context);
 
 
     const handleDrawerOpen = () => {
@@ -33,7 +34,7 @@ const Structure: FC<IStructure> = (props) => {
             <div className={styles.container} id="main" onClick={() => setOpen(false)}>
                 <DrawerMenu open={open}/>
                 <main className={mainClassName}>
-                    {error && <Alert severity="error">{error}</Alert>}
+                    {backendErrors && backendErrors.length > 0 && <Alert severity="error">{backendErrors}</Alert>}
                     {children}
                 </main>
             </div>

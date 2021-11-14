@@ -1,12 +1,12 @@
-import React, {FC, useState} from "react";
+import React, { FC, useState } from "react";
 import styles from "../styles/Input.module.scss";
-import {TextField} from "@mui/material";
-import {DateTimePicker, LocalizationProvider} from "@mui/lab";
+import { TextField } from "@mui/material";
+import { DateTimePicker, LocalizationProvider } from "@mui/lab";
 import DateAdapter from "@mui/lab/AdapterDateFns";
-import {de} from "date-fns/locale";
-import {formatISO, isValid} from "date-fns";
-import {IFormData, IFormDataError} from "./interfaces";
-import {COMMON_CONSTANTS} from "./utils";
+import { de } from "date-fns/locale";
+import { formatISO, isValid } from "date-fns";
+import { IFormData, IFormDataError } from "./interfaces";
+import { COMMON_CONSTANTS } from "./utils";
 
 interface ISensorForm {
     type: string;
@@ -71,7 +71,8 @@ const SensorForm: FC<ISensorForm> = (props) => {
                 variant="outlined"
                 onChange={handleInput}
                 error={errors.temperature}
-                helperText={errors.temperature && "This field is required."}
+                helperText={errors.temperature ? (formData.temperature && formData.temperature.length > 0) ? "Only numbers accepted."
+                    : "This field is required." : ''}
                 value={formData.temperature}
             />
             <TextField
@@ -81,7 +82,8 @@ const SensorForm: FC<ISensorForm> = (props) => {
                 variant="outlined"
                 onChange={handleInput}
                 error={errors.humidity}
-                helperText={errors.humidity && "This field is required."}
+                helperText={errors.humidity ? (formData.humidity && formData.humidity.length > 0) ? "Only numbers accepted."
+                    : "This field is required." : ''}
                 value={formData.humidity}
             />
         </>

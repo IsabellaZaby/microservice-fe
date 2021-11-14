@@ -17,6 +17,9 @@ export const validateForm = (formData: IFormData, setErrors: (err: IFormDataErro
         if (value === null || value.length <= 0) {
             formErrors[key] = true;
         }
+        if ((key === 'temperature' || key === 'humidity') && value && isNaN(parseInt(value))){
+            formErrors[key] = true;
+        }
     });
     setErrors({...formErrors});
     return formErrors;

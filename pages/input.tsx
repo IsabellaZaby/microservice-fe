@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Structure from "../components/Structure";
 import { Box, Button } from "@mui/material";
 import styles from "../styles/Input.module.scss";
@@ -25,11 +25,17 @@ const initialFormErrorState: IFormDataError = {
 };
 
 const Input: NextPage = () => {
-    const context = useContext(Context);
+    const {loading, setLoading, backendErrors, setBackendErrors} = useContext(Context);
 
     const [sensorAdded, setSensorAdded] = useState(false);
     const [errors, setErrors] = useState<IFormDataError>(initialFormErrorState);
     const [formData, setFormData] = useState<IFormData>(initialFormState);
+
+    useEffect(() => {
+        return () => {
+            setBackendErrors('');
+        };
+    }, []);
 
     const resetForm = () => {
         setSensorAdded(false)
@@ -38,8 +44,8 @@ const Input: NextPage = () => {
     };
 
     const submitForm = async () => {
-        context.backendErrors = undefined;
-        context.loading = true;
+        setBackendErrors('');
+        setLoading(true);
         const formErrors = validateForm(formData, setErrors, errors);
         if (!formErrors.timestamp && !formErrors.sensorId && !formErrors.humidity && !formErrors.temperature) {
             const rawResponse = await fetch('http://localhost:8080/add', {
@@ -49,16 +55,16 @@ const Input: NextPage = () => {
             });
             if (rawResponse.status !== 200) {
                 const content = await rawResponse.json();
-                context.backendErrors = content.message;
+                setBackendErrors(content.message);
             } else {
                 setSensorAdded(true);
             }
         }
-        context.loading = false;
+        setLoading(false);
     };
 
     return (
-        <Structure error={context.backendErrors}>
+        <Structure>
             <h1>Input</h1>
             {!sensorAdded ? <Box component="form">
                     <div className={styles.wrapper}>
@@ -69,7 +75,7 @@ const Input: NextPage = () => {
                             setFormData={setFormData}
                             formData={formData}/>
                         <LoadingButton
-                            loading={context.loading}
+                            loading={loading}
                             variant="contained"
                             onClick={submitForm}>
                             Submit

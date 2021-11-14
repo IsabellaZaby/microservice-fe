@@ -13,7 +13,7 @@ import { Context } from "./_app";
 
 const Delete: NextPage = () => {
 
-    const context = useContext(Context);
+    const {loading, setLoading, backendErrors, setBackendErrors} = useContext(Context);
     const [pageLoad, setPageLoad] = useState(true);
     const [selected, setSelected] = useState<number[]>([]);
     const [sensors, setSensors] = useState<ISensor[]>([]);
@@ -39,7 +39,6 @@ const Delete: NextPage = () => {
         });
     };
 
-
     const headers = new Headers({
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -62,10 +61,10 @@ const Delete: NextPage = () => {
     };
 
     const updateData = () => {
-        context.backendErrors = undefined;
+        setBackendErrors('');
         const formErrors = validateForm(formData, setErrors, errors);
         if (selected?.length === 1 && !formErrors.timestamp && !formErrors.humidity && !formErrors.temperature) {
-            context.loading = true;
+            setLoading(true);
             selected.forEach(async (id) => {
                 const rawResponse = await fetch('http://localhost:8080/update', {
                     method: 'PUT',
@@ -74,7 +73,7 @@ const Delete: NextPage = () => {
                 });
                 if (rawResponse.status !== 200) {
                     const content = await rawResponse.json();
-                    context.backendErrors = content.message;
+                    setBackendErrors(content.message);
                 } else {
                     fetchData();
                     setIsUpdate(false);
@@ -82,15 +81,19 @@ const Delete: NextPage = () => {
                 }
             });
         }
-        context.loading = false;
+        setLoading(false);
     };
 
     useEffect(() => {
         fetchData();
+
+        return () => {
+            setBackendErrors('');
+        }
     }, []);
 
     return (
-        <Structure error={context.backendErrors}>
+        <Structure>
             {!isUpdate ? <Table
                     sensors={sensors}
                     setSensors={setSensors}
@@ -108,7 +111,7 @@ const Delete: NextPage = () => {
                         type={COMMON_CONSTANTS.UPDATE}
                     />
                     <LoadingButton
-                        loading={context.loading}
+                        loading={loading}
                         variant="contained"
                         onClick={updateData}
                         className={styles.button}>
@@ -116,7 +119,10 @@ const Delete: NextPage = () => {
                     </LoadingButton>
                     <Button
                         variant="outlined"
-                        onClick={() => setIsUpdate(false)}
+                        onClick={() => {
+                            setIsUpdate(false);
+                            setBackendErrors('');
+                        }}
                         className={styles.button}>
                         Cancel Update
                     </Button>
